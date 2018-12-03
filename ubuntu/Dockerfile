@@ -8,12 +8,13 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -yq update
-RUN apt-get install -yq --no-install-recommends apt-utils
-RUN apt-get install -yq software-properties-common
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
-
 RUN apt-get -yq update \
+    && apt-get install -yq software-properties-common \
+    && apt-get install -yq --no-install-recommends apt-utils \
+    && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get -yq update \
+    && apt-get install -yq software-properties-common \
     && apt-get install -yq git bash bash-completion zsh \
     && apt-get install -yq python-dev python3-dev \
     && apt-get install -yq build-essential cmake automake vim manpages-dev man man-db lsof \
@@ -29,18 +30,27 @@ RUN apt-get -yq update \
     && apt-get install -yq openjdk-8-jdk \
     && apt-get clean
 
+#cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz \
+    && tar -zxf cmake-3.13.1.tar.gz \
+    && (cd cmake-3.13.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
+    && ldconfig && rm -fr cmake*
+
 #clang7
 RUN echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list \
     && echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
     && apt-get -yq update \
-    && apt-get install -yq libclang-7-dev \
+    && apt-get install -yq clang-7 libclang-7-dev \
     && apt-get clean
 
 RUN echo "/usr/local/lib/" >> /etc/ld.so.conf.d/usr_local_lib.conf \
     && locale-gen zh_CN.UTF-8 en_US.UTF-8 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 60 \
+    && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 60 \
+    && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-7 60 \
+    && update-alternatives --install /usr/bin/clang-cpp clang-cpp /usr/bin/clang-cpp-7 60 \
     && ldconfig && updatedb
 
 #zstd
@@ -111,7 +121,7 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 #    && vim +PlugInstall +qall \
-#    && (cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --system-boost --system-libclang) \
+#    && (cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang) \
 #    && cp -f docs/profiles/ubuntu/.vimrc ~/.vimrc \
 #    && rm -rf docs*
 
