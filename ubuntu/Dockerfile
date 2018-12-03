@@ -115,20 +115,20 @@ ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && /bin/bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && git clone https://github.com/helayzhang/docs.git \
-    && cp -f docs/profiles/ubuntu/.vimrc ~/.vimrc \
-    && cp -f docs/profiles/ubuntu/.my_profile ~/.my_profile \
-    && cp -f docs/profiles/ubuntu/.zshrc ~/.zshrc \
+    && cp -f docs/profiles/ubuntu/.vimrc ~ \
+    && cp -f docs/profiles/ubuntu/.my_profile ~ \
+    && cp -f docs/profiles/ubuntu/.zshrc ~ \
+    && cp -f docs/profiles/ubuntu/.bashrc ~ \
+    && cp -f docs/profiles/ubuntu/.ycm_extra_conf.py ~ \
     && curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-#    && vim +PlugInstall +qall \
-#    && (cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang) \
-#    && cp -f docs/profiles/ubuntu/.vimrc ~/.vimrc \
-#    && rm -rf docs*
-
-RUN ldconfig && updatedb \
-    && echo "ulimit -n 1000000" >> ~/.bashrc \
-    && echo "ulimit -c unlimited" >> ~/.bashrc 
+RUN ldconfig && updatedb
 
 WORKDIR /root
 
 ENV TERM xterm
+
+# 首次进入容器，还需完成
+# 1. apt-get install tzdata 设置时区
+# 2. vim :PlugInstall
+# 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang
