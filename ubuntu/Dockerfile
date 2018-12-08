@@ -8,6 +8,10 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+RUN echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list.d/llvm.list \
+    && echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list.d/llvm.list \
+    && echo 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/' >> /etc/apt/sources.list.d/clickhouse.list
+
 RUN apt-get -yq update \
     && apt-get install -yq software-properties-common \
     && apt-get install -yq --no-install-recommends apt-utils \
@@ -21,7 +25,7 @@ RUN apt-get -yq update \
     && apt-get install -yq autoconf autoconf-archive libtool pkg-config byacc flex bison \
     && apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping \
     && apt-get install -yq tree locales sudo htop wget curl unzip \
-    && apt-get install -yq gcc-8 g++-8 \
+    && apt-get install -yq gcc-8 g++-8 lua5.3 \
     && apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
     && apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev \
     && apt-get install -yq libiberty-dev liblz4-dev liblzma-dev libsnappy-dev zlib1g-dev binutils-dev \
@@ -30,28 +34,33 @@ RUN apt-get -yq update \
     && apt-get install -yq openjdk-8-jdk \
     && apt-get clean
 
-#cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz \
-    && tar -zxf cmake-3.13.1.tar.gz \
-    && (cd cmake-3.13.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
-    && ldconfig && rm -fr cmake*
-
 #clang7
-RUN echo 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list \
-    && echo 'deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main' >> /etc/apt/sources.list \
-    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
     && apt-get -yq update \
     && apt-get install -yq clang-7 libclang-7-dev \
     && apt-get clean
 
+#clickhouse
+#RUN apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4 \
+#    && apt-get -yq update \
+#    && apt-get install -yq clickhouse-client clickhouse-server \
+#    && apt-get clean
+
 RUN echo "/usr/local/lib/" >> /etc/ld.so.conf.d/usr_local_lib.conf \
     && locale-gen zh_CN.UTF-8 en_US.UTF-8 \
+    && update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 60 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 60 \
     && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 60 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-7 60 \
     && update-alternatives --install /usr/bin/clang-cpp clang-cpp /usr/bin/clang-cpp-7 60 \
     && ldconfig && updatedb
+
+#cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz \
+    && tar -zxf cmake-3.13.1.tar.gz \
+    && (cd cmake-3.13.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
+    && ldconfig && rm -fr cmake*
 
 #zstd
 RUN wget -O zstd-1.3.7.tar.gz https://github.com/facebook/zstd/releases/download/v1.3.7/zstd-1.3.7.tar.gz \
