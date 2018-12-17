@@ -119,7 +119,7 @@ ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
 #protobuf
 RUN git clone https://github.com/protocolbuffers/protobuf.git \
-    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && make -j ${JOBNUM} && make install) \
+    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf protobuf*
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
