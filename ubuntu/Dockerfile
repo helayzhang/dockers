@@ -8,9 +8,11 @@ USER root
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -yq update \
+RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
+    && apt-get -yq update \
     && apt-get install -yq software-properties-common \
     && apt-get install -yq --no-install-recommends apt-utils \
+    && dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall \
     && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
     && add-apt-repository ppa:git-core/ppa -y
 
@@ -18,10 +20,10 @@ RUN apt-get -yq update \
     && apt-get install -yq software-properties-common \
     && apt-get install -yq git bash bash-completion zsh \
     && apt-get install -yq python-dev python3-dev \
-    && apt-get install -yq build-essential cmake automake vim manpages-dev man man-db lsof \
+    && apt-get install -yq build-essential cmake automake vim manpages-dev manpages-posix-dev man man-db lsof \
     && apt-get install -yq autoconf autoconf-archive libtool pkg-config byacc flex bison \
     && apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping \
-    && apt-get install -yq tree locales sudo htop wget curl unzip \
+    && apt-get install -yq tree locales sudo htop wget curl unzip dstat telnet \
     && apt-get install -yq gcc-8 g++-8 lua5.3 \
     && apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
     && apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev \
@@ -107,13 +109,18 @@ RUN git clone https://github.com/universal-ctags/ctags.git \
     && ldconfig && rm -fr ctags*
 
 #golang
-RUN wget https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go1.11.2.linux-amd64.tar.gz \
+RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz \
+    && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz \
     && rm -rf go* && mkdir -p /root/codes/go/bin
       
 ENV GOROOT /usr/local/go
 ENV GOPATH /root/codes/go
 ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
+
+#protobuf
+RUN git clone https://github.com/protocolbuffers/protobuf.git \
+    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && make -j ${JOBNUM} && make install) \
+    && ldconfig && rm -rf protobuf*
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
     && /bin/bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
