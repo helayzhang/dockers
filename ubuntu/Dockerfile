@@ -142,3 +142,4 @@ ENV TERM xterm
 # 1. apt-get install tzdata 设置时区
 # 2. vim :PlugInstall
 # 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang
+# 4. ~/.fzf/install
