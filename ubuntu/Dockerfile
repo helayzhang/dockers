@@ -109,13 +109,13 @@ RUN git clone https://github.com/universal-ctags/ctags.git \
     && ldconfig && rm -fr ctags*
 
 #golang
-RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz \
-    && rm -rf go* && mkdir -p /root/codes/go/bin
+#RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz \
+#    && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz \
+#    && rm -rf go* && mkdir -p /root/codes/go/bin
       
-ENV GOROOT /usr/local/go
-ENV GOPATH /root/codes/go
-ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
+#ENV GOROOT /usr/local/go
+#ENV GOPATH /root/codes/go
+#ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
 
 #protobuf
 RUN git clone https://github.com/protocolbuffers/protobuf.git \
@@ -141,5 +141,6 @@ ENV TERM xterm
 # 首次进入容器，还需完成
 # 1. apt-get install tzdata 设置时区
 # 2. vim :PlugInstall
+# 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --system-boost --system-libclang
 # 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang
 # 4. ~/.fzf/install

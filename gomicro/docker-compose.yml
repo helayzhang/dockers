@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  api:
+    command: --registry_address=consul-agent-1:8500 --register_interval=5 --register_ttl=10 api
+    image: microhq/micro:latest
+    ports:
+    - "8080:8080"
+  proxy:
+    command: --registry_address=consul-agent-1:8500 --register_interval=5 --register_ttl=10 proxy
+    image: microhq/micro:latest
+    ports:
+    - "8081:8081"
+  web:
+    command: --registry_address=consul-agent-1:8500 --register_interval=5 --register_ttl=10 web
+    image: microhq/micro:latest
+    ports:
+    - "8082:8082"
+  
+# 使用已存在的网络：consul-net
+networks:
+    default:
+        external:
+            name: consul_consul-net

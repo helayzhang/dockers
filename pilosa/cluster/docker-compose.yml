@@ -1,0 +1,31 @@
+version: '2'
+services: 
+  pilosa1:
+    image: pilosa/pilosa:latest
+    ports:
+      - "10101:10101"
+    environment:
+      - PILOSA_CLUSTER_COORDINATOR=true
+      - PILOSA_GOSSIP_SEEDS=pilosa1:14000
+    networks:
+      - pilosanet
+    entrypoint:
+      - /pilosa
+      - server
+      - --bind
+      - "pilosa1:10101"
+  pilosa2:
+    image: pilosa/pilosa:latest
+    ports:
+      - "10102:10101"
+    environment:
+      - PILOSA_GOSSIP_SEEDS=pilosa1:14000
+    networks:
+      - pilosanet
+    entrypoint:
+      - /pilosa
+      - server
+      - --bind
+      - "pilosa2:10101"
+networks: 
+  pilosanet:
