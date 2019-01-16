@@ -1,0 +1,14 @@
+# node2.config.toml
+
+data-dir = "node2_data"
+bind = "https://02.pilosa.local:10502"
+
+[tls]
+certificate = "pilosa.local.crt"
+key = "pilosa.local.key"
+skip-verify = true
+
+[gossip]
+seeds = ["01.pilosa.local:15000"]
+port = 16000
+key = "pilosa.local.gossip32"

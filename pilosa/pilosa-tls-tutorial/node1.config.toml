@@ -1,0 +1,17 @@
+# node1.config.toml
+
+data-dir = "node1_data"
+bind = "https://01.pilosa.local:10501"
+
+[cluster]
+coordinator = true
+
+[tls]
+certificate = "pilosa.local.crt"
+key = "pilosa.local.key"
+skip-verify = true
+
+[gossip]
+seeds = ["01.pilosa.local:15000"]
+port = 15000
+key = "pilosa.local.gossip32"

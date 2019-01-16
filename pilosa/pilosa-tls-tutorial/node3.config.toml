@@ -1,0 +1,14 @@
+# node3.config.toml
+
+data-dir = "node3_data"
+bind = "https://03.pilosa.local:10503"
+
+[tls]
+certificate = "pilosa.local.crt"
+key = "pilosa.local.key"
+skip-verify = true
+
+[gossip]
+seeds = ["01.pilosa.local:15000"]
+port = 17000
+key = "pilosa.local.gossip32"
