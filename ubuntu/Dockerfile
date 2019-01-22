@@ -16,11 +16,11 @@ RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
     && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
     && add-apt-repository ppa:git-core/ppa -y
 
-RUN apt-get -yq update \
+RUN apt-get -yq update --fix-missing \
     && apt-get install -yq software-properties-common \
     && apt-get install -yq git bash bash-completion zsh \
-    && apt-get install -yq python-dev python3-dev \
-    && apt-get install -yq build-essential cmake automake vim manpages-dev manpages-posix-dev man man-db lsof \
+    && apt-get install -yq python-dev python3-dev python-pip \
+    && apt-get install -yq build-essential cmake automake make vim manpages-dev manpages-posix-dev man man-db lsof \
     && apt-get install -yq autoconf autoconf-archive libtool pkg-config byacc flex bison \
     && apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping \
     && apt-get install -yq tree locales sudo htop wget curl unzip dstat telnet \
@@ -28,7 +28,7 @@ RUN apt-get -yq update \
     && apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
     && apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev \
     && apt-get install -yq libiberty-dev liblz4-dev liblzma-dev libsnappy-dev zlib1g-dev binutils-dev \
-    && apt-get install -yq libunwind8-dev libelf-dev libdwarf-dev libsodium-dev \
+    && apt-get install -yq libunwind8-dev libelf-dev libdwarf-dev libsodium-dev libc++-dev libc++abi-dev libtbb-dev \
     && apt-get install -yq mysql-client libmysqlclient-dev \
     && apt-get install -yq openjdk-8-jdk \
     && apt-get clean
@@ -119,7 +119,7 @@ RUN git clone https://github.com/universal-ctags/ctags.git \
 
 #protobuf
 RUN git clone https://github.com/protocolbuffers/protobuf.git \
-    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure && make -j ${JOBNUM} && make install) \
+    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure CXX=clang++ CXXFLAGS='-std=c++11 -stdlib=libc++ -O3 -g' && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf protobuf*
 
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
