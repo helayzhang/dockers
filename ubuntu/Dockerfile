@@ -112,7 +112,6 @@ RUN git clone https://github.com/universal-ctags/ctags.git \
 #RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz \
 #    && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz \
 #    && rm -rf go* && mkdir -p /root/codes/go/bin
-      
 #ENV GOROOT /usr/local/go
 #ENV GOPATH /root/codes/go
 #ENV PATH $PATH:$GOROOT/bin:$GOPATH/bin
@@ -122,8 +121,8 @@ RUN git clone https://github.com/protocolbuffers/protobuf.git \
     && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure CXX=clang++ CXXFLAGS='-std=c++11 -stdlib=libc++ -O3 -g' && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf protobuf*
 
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
-    && /bin/bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
+#oh-my-zsh/.vimrc/vim-plug/profiles
+RUN /bin/bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \
     && git clone https://github.com/helayzhang/docs.git \
     && cp -f docs/profiles/ubuntu/.vimrc ~ \
     && cp -f docs/profiles/ubuntu/.my_profile ~ \
@@ -143,4 +142,3 @@ ENV TERM xterm
 # 2. vim :PlugInstall
 # 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --system-boost --system-libclang
 # 3. cd ~/.vim/plugged/YouCompleteMe && python3 install.py --clang-completer --go-completer --system-boost --system-libclang
-# 4. ~/.fzf/install
