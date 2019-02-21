@@ -11,6 +11,7 @@ services:
   kafka1:
     image: wurstmeister/kafka
     container_name: c1_kafka1
+    restart: unless-stopped
     ports:
       - "9192:9092"
     environment:
@@ -26,6 +27,7 @@ services:
   kafka2:
     image: wurstmeister/kafka
     container_name: c1_kafka2
+    restart: unless-stopped
     ports:
       - "9193:9092"
     environment:
@@ -41,6 +43,7 @@ services:
   kafka3:
     image: wurstmeister/kafka
     container_name: c1_kafka3
+    restart: unless-stopped
     ports:
       - "9194:9092"
     environment:
