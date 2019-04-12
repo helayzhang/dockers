@@ -25,7 +25,7 @@ RUN apt-get -yq update --fix-missing \
     && apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping \
     && apt-get install -yq tree locales sudo htop wget curl unzip dstat telnet \
     && apt-get install -yq gcc-8 g++-8 lua5.3 \
-    && apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
+    && apt-get install -yq libc6-dev-i386 libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
     && apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev \
     && apt-get install -yq libiberty-dev liblz4-dev liblzma-dev libsnappy-dev zlib1g-dev binutils-dev \
     && apt-get install -yq libunwind8-dev libelf-dev libdwarf-dev libsodium-dev libc++-dev libc++abi-dev libtbb-dev \
