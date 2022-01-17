@@ -1,7 +1,5 @@
 FROM ubuntu:18.04
 
-MAINTAINER helayzhang "helayzhang@gmail.com"
-
 ARG JOBNUM=2
 
 USER root
@@ -53,15 +51,15 @@ RUN echo "/usr/local/lib/" >> /etc/ld.so.conf.d/usr_local_lib.conf \
     && ldconfig && updatedb
 
 #cmake
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz \
-    && tar -zxf cmake-3.13.1.tar.gz \
-    && (cd cmake-3.13.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1.tar.gz \
+    && tar -zxf cmake-3.22.1.tar.gz \
+    && (cd cmake-3.22.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
     && ldconfig && rm -fr cmake*
 
 #zstd
-RUN wget -O zstd-1.3.7.tar.gz https://github.com/facebook/zstd/releases/download/v1.3.7/zstd-1.3.7.tar.gz \
-    && tar -zxf zstd-1.3.7.tar.gz \
-    && (cd zstd-1.3.7/build/cmake && cmake . -DBUILD_SHARED_LIBS=ON && make -j ${JOBNUM} && make install) \
+RUN wget -O zstd-1.5.1.tar.gz https://github.com/facebook/zstd/releases/download/v1.5.1/zstd-1.5.1.tar.gz \
+    && tar -zxf zstd-1.5.1.tar.gz \
+    && (cd zstd-1.5.1/build/cmake && cmake . -DBUILD_SHARED_LIBS=ON && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -fr zstd*
 
 #mstch
@@ -72,33 +70,33 @@ RUN wget -O mstch-1.0.2.tar.gz https://github.com/no1msd/mstch/archive/1.0.2.tar
     && ldconfig && rm -fr mstch*
 
 #folly
-RUN wget -O folly-2018.11.26.00.tar.gz https://github.com/facebook/folly/archive/v2018.11.26.00.tar.gz \
-    && tar zxf folly-2018.11.26.00.tar.gz \
-    && (cd folly-2018.11.26.00 && cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON . && make -j ${JOBNUM} && make install) \
+RUN wget -O folly-2022.1.3.00.tar.gz https://github.com/facebook/folly/releases/download/v2022.1.3.00.tar.gz \
+    && tar zxf folly-2022.1.3.00.tar.gz \
+    && (cd folly-2022.1.3.00 && cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON . && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf folly* 
 
 #fizz
-RUN wget -O fizz-2018.11.26.00.tar.gz https://github.com/facebookincubator/fizz/archive/v2018.11.26.00.tar.gz \
-    && tar zxf fizz-2018.11.26.00.tar.gz \
-    && (cd fizz-2018.11.26.00/fizz && cmake . && make -j ${JOBNUM} && make install) \
+RUN wget -O fizz-2022.1.3.00.tar.gz https://github.com/facebookincubator/fizz/releases/download/v2022.1.3.00.tar.gz \
+    && tar zxf fizz-2022.1.3.00.tar.gz \
+    && (cd fizz-2022.1.3.00/fizz && cmake . && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf fizz* 
 
 #wangle
-RUN wget -O wangle-2018.11.26.00.tar.gz https://github.com/facebook/wangle/archive/v2018.11.26.00.tar.gz \
-    && tar zxf wangle-2018.11.26.00.tar.gz \
-    && (cd wangle-2018.11.26.00/wangle && cmake . && make -j ${JOBNUM} && make install) \
+RUN wget -O wangle-2022.1.3.00.tar.gz https://github.com/facebook/wangle/releases/download/v2022.1.3.00.tar.gz \
+    && tar zxf wangle-2022.1.3.00.tar.gz \
+    && (cd wangle-2022.1.3.00/wangle && cmake . && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -rf wangle* 
 
 #fbthrift
-RUN wget -O fbthrift-2018.11.26.00.tar.gz https://github.com/facebook/fbthrift/archive/v2018.11.26.00.tar.gz \
-    && tar zxf fbthrift-2018.11.26.00.tar.gz \
-    && (cd fbthrift-2018.11.26.00 && cmake . -DBUILD_SHARED_LIBS=ON && make -j ${JOBNUM} && make install) \
+RUN wget -O fbthrift-2020.8.24.00.tar.gz https://github.com/facebook/fbthrift/releases/download/v2020.8.24.00.tar.gz \
+    && tar zxf fbthrift-2020.8.24.00.tar.gz \
+    && (cd fbthrift-2020.8.24.00 && cmake . -DBUILD_SHARED_LIBS=ON && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -fr fbthrift*
 
 #rocksdb
-RUN wget -O rocksdb-5.17.2.tar.gz https://github.com/facebook/rocksdb/archive/v5.17.2.tar.gz \
-    && tar zxf rocksdb-5.17.2.tar.gz \
-    && (cd rocksdb-5.17.2 && cmake . -DWITH_TESTS=OFF -DWITH_JEMALLOC=ON -DWITH_SNAPPY=ON \
+RUN wget -O rocksdb-6.27.3.tar.gz https://github.com/facebook/rocksdb/releases/download/v6.27.3.tar.gz \
+    && tar zxf rocksdb-6.27.3.tar.gz \
+    && (cd rocksdb-6.27.3 && cmake . -DWITH_TESTS=OFF -DWITH_JEMALLOC=ON -DWITH_SNAPPY=ON \
         -DWITH_LZ4=ON -DWITH_ZLIB=ON -DWITH_ZSTD=ON -DWITH_GFLAGS=ON -DBUILD_SHARED_LIBS=ON \
         && make -j ${JOBNUM} && make install) \
     && ldconfig && rm -fr rocksdb*
