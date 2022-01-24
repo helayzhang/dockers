@@ -8,28 +8,25 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN rm /etc/dpkg/dpkg.cfg.d/excludes \
     && apt-get -yq update \
-    && apt-get install -yq software-properties-common \
     && apt-get install -yq --no-install-recommends apt-utils \
-    && dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall \
+    && apt-get install -yq software-properties-common \
     && add-apt-repository ppa:ubuntu-toolchain-r/test -y \
-    && add-apt-repository ppa:git-core/ppa -y
-
-RUN apt-get -yq update --fix-missing
-RUN apt-get install -yq software-properties-common
-RUN apt-get install -yq git bash bash-completion zsh
-RUN apt-get install -yq python-dev python3-dev python3-pip
-RUN apt-get install -yq build-essential cmake automake make vim manpages-dev manpages-posix-dev man man-db lsof
-RUN apt-get install -yq autoconf autoconf-archive libtool pkg-config byacc flex bison
-RUN apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping
-RUN apt-get install -yq tree locales sudo htop wget curl unzip dstat telnet
-RUN apt-get install -yq gcc-11 g++-11 lua5.3
-RUN apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev
-RUN apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev
-RUN apt-get install -yq libiberty-dev liblz4-dev liblzma-dev libsnappy-dev zlib1g-dev binutils-dev
-RUN apt-get install -yq libunwind-dev libelf-dev libdwarf-dev libsodium-dev libc++-dev libc++abi-dev libtbb-dev
-RUN apt-get install -yq libavdevice-dev libpulse-dev libopus-dev libevdev-dev
-RUN apt-get install -yq mysql-client libmysqlclient-dev
-RUN apt-get install -yq openjdk-17-jdk
+    && add-apt-repository ppa:git-core/ppa -y \
+    && apt-get install -yq git bash bash-completion zsh \
+    && apt-get install -yq python-dev python3-dev python3-pip \
+    && apt-get install -yq build-essential cmake automake make vim manpages-dev manpages-posix-dev man man-db lsof \
+    && apt-get install -yq autoconf autoconf-archive libtool pkg-config byacc flex bison \
+    && apt-get install -yq gdb valgrind locate net-tools vnstat nss-updatedb inetutils-ping \
+    && apt-get install -yq tree locales sudo htop wget curl unzip dstat telnet \
+    && apt-get install -yq gcc-11 g++-11 lua5.3 \
+    && apt-get install -yq libbison-dev libjemalloc-dev libboost-all-dev libgflags-dev libgoogle-glog-dev \
+    && apt-get install -yq libkrb5-dev libssl-dev libevent-dev libev-dev libdouble-conversion-dev \
+    && apt-get install -yq libiberty-dev liblz4-dev liblzma-dev libsnappy-dev zlib1g-dev binutils-dev \
+    && apt-get install -yq libunwind-dev libelf-dev libdwarf-dev libsodium-dev libc++-dev libc++abi-dev libtbb-dev \
+    && apt-get install -yq libavdevice-dev libpulse-dev libopus-dev libevdev-dev \
+    && apt-get install -yq libxtst-dev libx11-dev libxrandr-dev libxfixes-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev \
+    && apt-get install -yq mysql-client libmysqlclient-dev \
+    && apt-get install -yq openjdk-17-jdk
 
 #clang13
 RUN echo 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main' >> /etc/apt/sources.list.d/llvm.list \
@@ -49,10 +46,10 @@ RUN echo "/usr/local/lib/" >> /etc/ld.so.conf.d/usr_local_lib.conf \
     && ldconfig && updatedb
 
 #cmake
-#RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1.tar.gz \
-#    && tar -zxf cmake-3.22.1.tar.gz \
-#    && (cd cmake-3.22.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
-#    && ldconfig && rm -fr cmake*
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.1/cmake-3.22.1.tar.gz \
+    && tar -zxf cmake-3.22.1.tar.gz \
+    && (cd cmake-3.22.1 && ./bootstrap -- -DCMAKE_BUILD_TYPE:STRING=Release && make -j${JOBNUM} && make install) \
+    && ldconfig && rm -fr cmake*
 
 #universal-ctags
 RUN git clone https://github.com/universal-ctags/ctags.git \
@@ -60,9 +57,9 @@ RUN git clone https://github.com/universal-ctags/ctags.git \
     && ldconfig && rm -fr ctags*
 
 #protobuf
-#RUN git clone https://github.com/protocolbuffers/protobuf.git \
-#    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure' && make -j ${JOBNUM} && make install) \
-#    && ldconfig && rm -rf protobuf*
+RUN git clone https://github.com/protocolbuffers/protobuf.git \
+    && (cd protobuf && git submodule update --init --recursive && ./autogen.sh && ./configure && make -j ${JOBNUM} && make install) \
+    && ldconfig && rm -rf protobuf*
 
 #oh-my-zsh/.vimrc/vim-plug/profiles
 RUN /bin/bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" \

@@ -7,11 +7,8 @@ rm /etc/dpkg/dpkg.cfg.d/excludes
 apt-get -yq update
 apt-get install -yq --no-install-recommends apt-utils
 apt-get install -yq software-properties-common
-
 add-apt-repository ppa:ubuntu-toolchain-r/test -y
 add-apt-repository ppa:git-core/ppa -y
-#dpkg -l | grep ^ii | cut -d' ' -f3 | xargs apt-get install -y --reinstall
-
 apt-get install -yq git bash bash-completion zsh
 apt-get install -yq python-dev python3-dev python3-pip
 apt-get install -yq build-essential cmake automake make vim manpages-dev manpages-posix-dev man man-db lsof
